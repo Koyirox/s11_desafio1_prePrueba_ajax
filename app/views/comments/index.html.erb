@@ -1,0 +1,41 @@
+<%# video %>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dzrwsUHc9fs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<%# hecho con helpers de rails (va al create)%>
+<%= form_with model: Comment.new do |f| %>
+  <%= f.label :content %>
+  <%= f.text_field :content %>
+  <%= f.submit :enviar %>
+<% end %>
+
+<%# hecho a mano para que mande (va al index)%> 
+<form action="<%= comments_index_path %>">
+  <input type="text" name="q" value="Buscar"> <%# llega con el q"%>
+</form>
+
+<div id="comments">
+    <%= render @comments %> <%# rails va a buscar una vista parcial con el nombre del recurso %>
+    <%# actualiza solo este id, renderiza los comentarios %>
+
+</div>
+
+<script>
+  $("[name=q]").keyup(function(event) {
+    $.ajax({
+      url: '<%= comments_index_path %>',
+      type: 'GET',
+      dataType: 'script',
+      data: {q: $(this).val()}
+    })
+    .done(function() {
+      console.log("success");
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    .always(function() {
+      console.log("complete");
+    });
+
+  });
+</script>
